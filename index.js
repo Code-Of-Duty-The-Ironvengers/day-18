@@ -66,7 +66,7 @@ const listOfBooks = [
 // const BookModel = mongoose.model("book", BookSchema);
 const Book = mongoose.model("movies", BookSchema);
 
-Book.findOne({ title: "Tony", author: "Tony" }).then((book) => {});
+// Book.findOne({ title: "Tony", author: "Tony" }).then((book) => {});
 // http protocol
 // connecting to the local host
 // at port 3000

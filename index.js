@@ -14,15 +14,20 @@
 const mongoose = require("mongoose");
 
 // Schema (mongoose term)
-const BookSchema = new mongoose.Schema({
-  title: String,
-  author: String,
-  releaseDate: Date,
-  publisher: String,
-  pages: Number,
-  issue: Number,
-  isInPreSale: Boolean,
-});
+const BookSchema = new mongoose.Schema(
+  {
+    title: String,
+    author: String,
+    releaseDate: Date,
+    publisher: String,
+    pages: Number,
+    issue: Number,
+    isInPreSale: Boolean,
+  },
+  {
+    timestamps: true,
+  }
+);
 
 const listOfBooks = [
   {
@@ -56,7 +61,7 @@ const listOfBooks = [
 
 // const BookCollectionConnection = mongoose.model("book", BookSchema);
 // const BookModel = mongoose.model("book", BookSchema);
-const Book = mongoose.model("book", BookSchema);
+const Book = mongoose.model("movies", BookSchema);
 
 // http protocol
 // connecting to the local host
@@ -114,10 +119,15 @@ console.log("number:", number);
 
 // }).then()
 
+// CRUD -> Create Read Update Delete
+
 mongoose
   .connect("mongodb://localhost:27017/books-nobody-care-about")
   .then(() => {
-    return Book.insertMany(listOfBooks);
+    return Book.deleteMany({}); // Delete
+  })
+  .then(() => {
+    return Book.insertMany(listOfBooks); // Creating
   })
   .then(() => {
     return Book.create({
@@ -127,18 +137,32 @@ mongoose
       isInPreSale: false,
       publisher: "Tonys Mom",
       releaseDate: new Date(),
-      title: "the title",
-    }).catch((err) => {
-      console.log("err:", err);
+      title: "the title revenge of the lisp",
     });
   })
-  .then((addedBooks) => {
-    console.log("Added books: ", addedBooks);
-    console.log("ABOUT TO GET A LIST OF ALL OF THE BOOKS");
-    return Book.find({}); //
+  //   .then((createdBook) => {
+  //     return Book.findById(createdBook._id); // Read
+  //   })
+  .then((bookCreated) => {
+    // console.log("bookByIdReceived:", bookByIdReceived);
+    return Book.findByIdAndUpdate(
+      bookCreated._id,
+      {
+        publisher: "naming is hard",
+      },
+      { new: true }
+    ); // Update
+  })
+  .then((updatedBook) => {
+    return Book.findByIdAndDelete(updatedBook._id);
+  })
+  .then((updatedBook) => {
+    console.log("updatedBook:", updatedBook);
+    // console.log("ABOUT TO GET A LIST OF ALL OF THE BOOKS");
+    return Book.find({}); // Read Operation
   })
   .then((listOfAllBooks) => {
-    console.log("listOfAllBooks:", listOfAllBooks);
+    // console.log("listOfAllBooks:", listOfAllBooks);
   })
   .catch((err) => {
     console.log("Oopsie something happened", err);

@@ -16,7 +16,10 @@ const mongoose = require("mongoose");
 // Schema (mongoose term)
 const BookSchema = new mongoose.Schema(
   {
-    title: String,
+    title: {
+      type: String,
+      unique: true,
+    },
     author: String,
     releaseDate: Date,
     publisher: String,
@@ -63,6 +66,7 @@ const listOfBooks = [
 // const BookModel = mongoose.model("book", BookSchema);
 const Book = mongoose.model("movies", BookSchema);
 
+Book.findOne({ title: "Tony", author: "Tony" }).then((book) => {});
 // http protocol
 // connecting to the local host
 // at port 3000
